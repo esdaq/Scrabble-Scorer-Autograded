@@ -33,25 +33,82 @@ function oldScrabbleScorer(word) {
 // don't change the names or your program won't work as expected. //
 
 function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
+   //console.log("Let's play some scrabble! Enter a word:");
+   let word = input.question("Let's play some scrabble! Enter a word: ");
+   return word;
 };
 
 let newPointStructure;
 
-let simpleScorer;
+let simpleScorer = function (word) {
+  //let letters = ['A', 'B' ,'C' ,'D' ,'E', 'F', 'G' ,'H' ,'I' ,'J' ,'K' ,'L' ,'M' ,'N' ,'O' ,'P' ,'Q' ,'R' ,'S' ,'T' ,'U' ,'V','W','X','Y','Z'];
+  //let num =  ['1', '2', '3', '4', '5', '6' , '7', '8', '9', '0'];
+  word = word.toUpperCase();
+  return word.length;;
+};
 
-let vowelBonusScorer;
+let vowelBonusScorer = function (word) {
+  //let vowels = ['A', 'E', 'I', 'O', 'U'];
+  const vowelBonusPointStructure = {
+    1: ['B' ,'C' ,'D', 'F', 'G' ,'H','J' ,'K' ,'L' ,'M' ,'N' ,'P' ,'Q' ,'R' ,'S' ,'T','V','W','X','Y','Z'],
+    3: ['A', 'E', 'I', 'O', 'U'],
+  };
+  word = word.toUpperCase();
+  let letterPoints = "";
+
+  for (let i = 0; i < word.length; i++) {
+	  for (const pointValue in vowelBonusPointStructure) {
+ 
+      if (vowelBonusPointStructure[pointValue].includes(word[i])) {
+       letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+      }
+  
+     }
+  }
+
+}
 
 let scrabbleScorer;
 
-const scoringAlgorithms = [];
 
-function scorerPrompt() {}
+const scoringAlgorithms = [
+  {
+    name: "Scrabble",
+    description: "The traditional scoring algorithm.",
+    scorerFunction: oldScrabbleScorer
+  },
+  {
+    name: "Simple Score",
+    description: "Each letter is worth 1 point.",
+    scorerFunction: simpleScorer
+  },
+  {
+    name: "Bonus Vowels",
+    description: "Vowels are 3 pts, consonants are 1 pt.",
+    scorerFunction: vowelBonusScorer
+  },
+
+];
+
+function scorerPrompt() {
+  let prompt = `
+    0 for simple scorer
+    1 for vowel scorer
+    2 for scrabble scorer
+  `;
+  console.log(prompt);
+  let scorer = input.question("Choose a scorer function to use: ")  
+  return scoringAlgorithms[scorer];
+  
+}
 
 function transform() {};
 
 function runProgram() {
-   initialPrompt();
+   let word = initialPrompt();
+   let algo = scorerPrompt();
+   console.log(`Score for '${word}': ${algo}` );
+   console.log(algo.scorerFunction(word));
    
 }
 
